@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@progress/kendo-react-grid": "^7.2.3",
+    "@progress/kendo-react-scheduler": "^7.2.3",
     "@progress/kendo-react-dateinputs": "^7.2.3",
     "@progress/kendo-react-dropdowns": "^7.2.3",
     "@progress/kendo-react-inputs": "^7.2.3",
@@ -30,7 +31,10 @@
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "cldr-dates-full": "^45.0.0",
+    "cldr-core": "^45.0.0",
+    "cldr-numbers-full": "^45.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

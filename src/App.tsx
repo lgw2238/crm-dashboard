@@ -6,6 +6,7 @@ import KanbanBoard from './components/KanbanBoard';
 import { CircleUserRound } from 'lucide-react';
 import Analytics from './components/Analytics';
 import GanttChart from './components/GanttChart';
+import Scheduler from './components/Scheduler';
 
 function App() {
   const [selected, setSelected] = useState(0);
@@ -36,6 +37,9 @@ function App() {
             </TabStripTab>
             <TabStripTab title="간트 차트">
               <GanttChart />
+            </TabStripTab>
+            <TabStripTab title="스케쥴러">
+              <Scheduler />
             </TabStripTab>
             <TabStripTab title="그래프">
               <Analytics />
