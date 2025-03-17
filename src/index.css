@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.k-grid {
+  @apply rounded-lg border border-gray-200;
+}
+
+.k-grid-header {
+  @apply bg-gray-50;
+}
+
+.k-grid td {
+  @apply border-gray-200;
+}
+
+.k-grid-header th {
+  @apply font-semibold text-gray-700 border-gray-200;
+}
+
+.k-grid tr:hover {
+  @apply bg-blue-50;
+}
+
+.app-container {
+  padding: 20px;
+}
+
+.kanban-container {
+  height: 600px;
+  margin-top: 20px;
+}
+
+.k-taskboard {
+  height: 100%;
+}
