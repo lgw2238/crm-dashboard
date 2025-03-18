@@ -10,6 +10,7 @@ export interface Customer {
   notes: string;
   inEdit?: boolean;
 }
+
 // 메인테이블의 컬럼 설정을 위한 인터페이스
 export interface ColumnConfig {
   field: string;
@@ -19,6 +20,7 @@ export interface ColumnConfig {
   cell?: (props: any) => JSX.Element;
   editor?: string;
   format?: string;
+  isCustom?: boolean;
 }
 
 export interface Table {

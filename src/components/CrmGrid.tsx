@@ -11,7 +11,7 @@ import { Popup } from '@progress/kendo-react-popup';
 import { orderBy, filterBy, CompositeFilterDescriptor, SortDescriptor } from '@progress/kendo-data-query';
 import { useCRMStore } from '../store/CrmStore';
 import { Customer, ColumnConfig } from '../types/Crm';
-import { Pencil, Trash2, MoreVertical, Plus, Columns } from 'lucide-react';
+import { Pencil, Trash2, MoreVertical, Plus, Columns, X } from 'lucide-react';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 
 const StatusCell = (props: GridCellProps) => {
@@ -219,6 +219,8 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
   const [selectedCustomers, setSelectedCustomers] = useState<Set<number>>(new Set());
   const [showColumnMenu, setShowColumnMenu] = useState(false);
   const columnMenuAnchor = React.useRef<HTMLButtonElement>(null);
+  const [newColumnName, setNewColumnName] = useState('');
+  const [showAddColumnForm, setShowAddColumnForm] = useState(false);
 
   const [columns, setColumns] = useState<ColumnConfig[]>([
     { field: 'name', title: 'Name', width: '150px', show: true , cell: EditableCell},
@@ -230,6 +232,41 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
     { field: 'lastContact', title: 'Last Contact', width: '150px', show: true, editor: 'date' as 'date', format: '{0:d}' , cell : DateCell },
     { field: 'notes', title: 'Notes', width: '200px', show: true , cell: EditableCell},
   ]);
+
+  const handleAddColumn = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newColumnName.trim()) {
+      const fieldName = newColumnName.toLowerCase().replace(/\s+/g, '_');
+      const newColumn: ColumnConfig = {
+        field: fieldName,
+        title: newColumnName.trim(),
+        width: '150px',
+        show: true,
+        isCustom: true
+      };
+      
+      // Add the new field to all existing customers with an empty value
+      customers.forEach(customer => {
+        updateCustomer(tableId, { ...customer, [fieldName]: '' });
+      });
+
+      setColumns([...columns, newColumn]);
+      setNewColumnName('');
+      setShowAddColumnForm(false);
+    }
+  };
+
+  const handleDeleteColumn = (field: string) => {
+    setColumns(columns.filter(col => col.field !== field));
+    
+    // Remove the field from all customers
+    customers.forEach(customer => {
+      const updatedCustomer = { ...customer };
+      delete (updatedCustomer as any)[field];
+      updateCustomer(tableId, updatedCustomer);
+    });
+  };
+
 
   const handleGridDataStateChange = (e: GridDataStateChangeEvent) => {
     setSort(e.dataState.sort || []);
@@ -311,20 +348,23 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
   return (
     <div>
       <div className="mb-4 flex justify-between items-center">
-        <button
-          onClick={() => addCustomer(tableId)}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-2"
-        >
-          Add Row
-        </button>
-        <button
-            ref={columnMenuAnchor}
-            onClick={() => setShowColumnMenu(!showColumnMenu)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-2"
+        <div className="flex gap-2">
+          <button
+            onClick={() => addCustomer(tableId)}
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-2"
           >
-            <Columns size={16} />
-            Manage Columns
-        </button>
+            <Plus size={16} />
+            Add Row
+          </button>
+          <button
+              ref={columnMenuAnchor}
+              onClick={() => setShowColumnMenu(!showColumnMenu)}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-2"
+            >
+              <Columns size={16} />
+              Manage Columns
+          </button>
+        </div>
         {selectedCustomers.size > 0 && (
           <button
             onClick={handleDeleteSelected}
@@ -338,24 +378,74 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
       <Popup
         anchor={columnMenuAnchor.current}
         show={showColumnMenu}
-        popupClass="bg-white rounded-lg shadow-lg p-4 w-64"
+        popupClass="bg-white rounded-lg shadow-lg p-4 w-80"
         onClose={() => setShowColumnMenu(false)}
       >
-        <div className="space-y-2">
-          <h3 className="font-semibold text-gray-900 mb-3">Visible Columns</h3>
-          {columns.map((column) => (
-            <div key={column.field} className="flex items-center gap-2">
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h3 className="font-semibold text-gray-900">Manage Columns</h3>
+            <button
+              onClick={() => setShowAddColumnForm(!showAddColumnForm)}
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1"
+            >
+              <Plus size={16} />
+              Add Column
+            </button>
+          </div>
+
+          {showAddColumnForm && (
+            <form onSubmit={handleAddColumn} className="space-y-2 border-b border-gray-200 pb-4">
               <input
-                type="checkbox"
-                checked={column.show}
-                onChange={() => toggleColumnVisibility(column.field)}
-                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                type="text"
+                value={newColumnName}
+                onChange={(e) => setNewColumnName(e.target.value)}
+                placeholder="Enter column name"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-700">{column.title}</span>
-            </div>
-          ))}
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddColumnForm(false)}
+                  className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Add Column
+                </button>
+              </div>
+            </form>
+          )}
+
+          <div className="space-y-2 max-h-80 overflow-y-auto">
+            {columns.map((column) => (
+              <div key={column.field} className="flex items-center justify-between gap-2 py-1">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={column.show}
+                    onChange={() => toggleColumnVisibility(column.field)}
+                    className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-gray-700">{column.title}</span>
+                </div>
+                {column.isCustom && (
+                  <button
+                    onClick={() => handleDeleteColumn(column.field)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </Popup>
+
       <Grid
         data={data}
         sortable={true}
