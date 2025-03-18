@@ -3,14 +3,15 @@ import {
   Grid,
   GridColumn,
   GridDataStateChangeEvent,
-  GridCellProps
+  GridCellProps,
+  GridColumnReorderEvent
 } from '@progress/kendo-react-grid';
 import { DropDownList } from '@progress/kendo-react-dropdowns';
 import { Popup } from '@progress/kendo-react-popup';
 import { orderBy, filterBy, CompositeFilterDescriptor, SortDescriptor } from '@progress/kendo-data-query';
 import { useCRMStore } from '../store/CrmStore';
-import { Customer } from '../types/Crm';
-import { Pencil, Trash2, MoreVertical } from 'lucide-react';
+import { Customer, ColumnConfig } from '../types/Crm';
+import { Pencil, Trash2, MoreVertical, Plus, Columns } from 'lucide-react';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 
 const StatusCell = (props: GridCellProps) => {
@@ -216,6 +217,19 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
     filters: [],
   });
   const [selectedCustomers, setSelectedCustomers] = useState<Set<number>>(new Set());
+  const [showColumnMenu, setShowColumnMenu] = useState(false);
+  const columnMenuAnchor = React.useRef<HTMLButtonElement>(null);
+
+  const [columns, setColumns] = useState<ColumnConfig[]>([
+    { field: 'name', title: 'Name', width: '150px', show: true , cell: EditableCell},
+    { field: 'company', title: 'Company', width: '150px', show: true , cell: EditableCell},
+    { field: 'email', title: 'Email', width: '200px', show: true , cell: EditableCell},
+    { field: 'phone', title: 'Phone', width: '150px', show: true , cell: EditableCell},
+    { field: 'status', title: 'Status', width: '120px', show: true, cell: StatusCell },
+    { field: 'priority', title: 'Priority', width: '120px', show: true, cell: PriorityCell },
+    { field: 'lastContact', title: 'Last Contact', width: '150px', show: true, editor: 'date' as 'date', format: '{0:d}' , cell : DateCell },
+    { field: 'notes', title: 'Notes', width: '200px', show: true , cell: EditableCell},
+  ]);
 
   const handleGridDataStateChange = (e: GridDataStateChangeEvent) => {
     setSort(e.dataState.sort || []);
@@ -276,6 +290,19 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
     tableId
   }));
 
+  const handleColumnReorder = (e: GridColumnReorderEvent) => {
+    const newColumns = [...columns];
+    const item = newColumns.splice(e.oldIndex - 1, 1)[0];
+    newColumns.splice(e.newIndex - 1, 0, item);
+    setColumns(newColumns);
+  };
+
+  const toggleColumnVisibility = (field: string) => {
+    setColumns(columns.map(col => 
+      col.field === field ? { ...col, show: !col.show } : col
+    ));
+  };
+
   const data = orderBy(
     filterBy(customersWithTableId, filter),
     sort
@@ -286,9 +313,17 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
       <div className="mb-4 flex justify-between items-center">
         <button
           onClick={() => addCustomer(tableId)}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200"
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-2"
         >
           Add Row
+        </button>
+        <button
+            ref={columnMenuAnchor}
+            onClick={() => setShowColumnMenu(!showColumnMenu)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-2"
+          >
+            <Columns size={16} />
+            Manage Columns
         </button>
         {selectedCustomers.size > 0 && (
           <button
@@ -300,10 +335,33 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
           </button>
         )}
       </div>
+      <Popup
+        anchor={columnMenuAnchor.current}
+        show={showColumnMenu}
+        popupClass="bg-white rounded-lg shadow-lg p-4 w-64"
+        onClose={() => setShowColumnMenu(false)}
+      >
+        <div className="space-y-2">
+          <h3 className="font-semibold text-gray-900 mb-3">Visible Columns</h3>
+          {columns.map((column) => (
+            <div key={column.field} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={column.show}
+                onChange={() => toggleColumnVisibility(column.field)}
+                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-700">{column.title}</span>
+            </div>
+          ))}
+        </div>
+      </Popup>
       <Grid
         data={data}
         sortable={true}
         filterable={false}
+        reorderable={true}
+        onColumnReorder={handleColumnReorder}
         onDataStateChange={handleGridDataStateChange}
         onItemChange={handleItemChange}
         onRowClick={handleCellClick}
@@ -328,7 +386,18 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
             />
           )}
         />
-        <GridColumn 
+         {columns.filter(col => col.show).map((column) => (
+          <GridColumn
+            key={column.field}
+            field={column.field}
+            title={column.title}
+            width={column.width}
+            cell={column.cell}
+            editor={column.editor}
+            format={column.format}
+          />
+        ))}
+        {/* <GridColumn 
           field="name" 
           title="Name" 
           width="150px"
@@ -376,7 +445,7 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
           title="Notes" 
           width="200px"
           cell={EditableCell}
-        />
+        /> */}
       </Grid>
     </div>
   );
