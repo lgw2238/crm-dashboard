@@ -1,3 +1,4 @@
+// 칸반 테이블 더미 데이터
 export const cards = [
     {
         "id":1,

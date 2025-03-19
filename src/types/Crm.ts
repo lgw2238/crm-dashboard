@@ -1,5 +1,23 @@
+/*
+** 컴포넌트 인터페이스 
+*/
+
+// export interface Customer {
+//   id: number;
+//   name: string;
+//   owner: JSX.Element;
+//   email: string;
+//   phone: string;
+//   status: 'New' | 'In Progress' | 'Closed';
+//   priority: 'Low' | 'Medium' | 'High';
+//   lastContact: Date;
+//   notes: string;
+//   inEdit?: boolean;
+// }
+// 프로필 및 파일 데이터 프로퍼티 추가
 export interface Customer {
   id: number;
+  project : string;
   name: string;
   company: string;
   email: string;
@@ -8,8 +26,16 @@ export interface Customer {
   priority: 'Low' | 'Medium' | 'High';
   lastContact: Date;
   notes: string;
-  inEdit?: boolean;
+  avatar?: string;
+  title?: string;
+  department?: string;
+  files?: Array<{
+    name: string;
+    size: number;
+    extension: string;
+  }>;
 }
+
 
 // 메인테이블의 컬럼 설정을 위한 인터페이스
 export interface ColumnConfig {

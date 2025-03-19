@@ -13,53 +13,57 @@ interface CRMState {
   updateTask: (task: Task) => void;
 }
 
-// dummy data
 const initialCustomers: Customer[] = [
   {
     id: 1,
-    name: "John Doe",
-    company: "Tech Corp",
-    email: "john@techcorp.com",
+    project : "Project A",
+    name: "Han Seung ju",
+    company: "EzAce",
+    email: "hansj@ez-ace.com",
     phone: "123-456-7890",
     status: "New",
     priority: "High",
     lastContact: new Date(),
-    notes: "Initial contact made"
+    notes: "Initial contact made",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    title: "Senior Developer",
+    department: "Engineering",
+    files: []
   },
   {
     id: 2,
-    name: "Jane Smith",
-    company: "Design Co",
-    email: "jane@designco.com",
+    project : "Project B",
+    name: "Lim Gun woo",
+    company: "EzAce",
+    email: "lgw@ez-ace.com",
     phone: "098-765-4321",
     status: "In Progress",
     priority: "Medium",
     lastContact: new Date(),
-    notes: "Following up next week"
+    notes: "Following up next week",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
+    title: "Senior Developer",
+    department: "Design",
+    files: []
   },
   {
     id: 3,
-    name: "Rose Johnson",
-    company: "Mobile Corp",
-    email: "rose@designco.com",
-    phone: "158-225-5421",
+    project : "Project C",
+    name: "Kim Tae Yeon",
+    company: "EzAce",
+    email: "tw@ez-ace.com",
+    phone: "098-765-4321",
     status: "Closed",
-    priority: "Low",
-    lastContact: new Date(),
-    notes: "Following up next week"
-  },
-  {
-    id: 4,
-    name: "Ann Brown",
-    company: "nono Co",
-    email: "ann@designco.com",
-    phone: "151-513-1222",
-    status: "In Progress",
     priority: "Medium",
     lastContact: new Date(),
-    notes: "Following up next week"
+    notes: "Following up next week",
+    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face",
+    title: "Design Lead",
+    department: "Design",
+    files: []
   }
 ];
+
 
 const today = new Date();
 const oneDay = 24 * 60 * 60 * 1000;
@@ -165,30 +169,35 @@ export const useCRMStore = create<CRMState>((set) => ({
           : table
       ),
     })),
-  addCustomer: (tableId) =>
-    set((state) => ({
-      tables: state.tables.map((table) =>
-        table.id === tableId
-          ? {
-              ...table,
-              customers: [
-                ...table.customers,
-                {
-                  id: Math.max(0, ...table.customers.map(c => c.id)) + 1,
-                  name: "",
-                  company: "",
-                  email: "",
-                  phone: "",
-                  status: "New",
-                  priority: "Medium",
-                  lastContact: new Date(),
-                  notes: ""
-                }
-              ],
-            }
-          : table
-      ),
-    })),
+    addCustomer: (tableId) =>
+      set((state) => ({
+        tables: state.tables.map((table) =>
+          table.id === tableId
+            ? {
+                ...table,
+                customers: [
+                  ...table.customers,
+                  {
+                    id: Math.max(0, ...table.customers.map(c => c.id)) + 1,
+                    project : "",
+                    name: "",
+                    company: "",
+                    email: "",
+                    phone: "",
+                    status: "New",
+                    priority: "Medium",
+                    lastContact: new Date(),
+                    notes: "",
+                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face",
+                    title: "",
+                    department: "",
+                    files: []
+                  }
+                ],
+              }
+            : table
+        ),
+      })),
   deleteCustomers: (tableId, customerIds) =>
     set((state) => ({
       tables: state.tables.map((table) =>

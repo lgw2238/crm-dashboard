@@ -1,0 +1,197 @@
+/* Professional Theme Colors */
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #64748b;
+  --border-color: #e2e8f0;
+  --header-bg: #f8fafc;
+  --hover-bg: #f1f5f9;
+  --danger-color: #dc2626;
+  --success-color: #16a34a;
+}
+
+/* Grid Customization */
+.k-grid {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.k-grid-header {
+  background: var(--header-bg) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.k-grid-header th {
+  padding: 12px 16px !important;
+  font-weight: 600 !important;
+  color: var(--secondary-color) !important;
+  border-bottom: none !important;
+  background: var(--header-bg) !important;
+}
+
+.k-grid td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: #1e293b !important;
+}
+
+.k-grid tr:hover {
+  background-color: var(--hover-bg) !important;
+}
+
+.k-grid-content {
+  overflow-y: auto !important;
+}
+
+/* Gantt Chart Customization */
+.k-gantt {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+}
+
+.k-gantt .k-grid-header {
+  background: var(--header-bg) !important;
+}
+
+.k-gantt .k-grid-content {
+  background: white !important;
+}
+
+/* TaskBoard Customization */
+.k-taskboard {
+  background: var(--header-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+}
+
+.k-taskboard-column {
+  background: white !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  margin: 8px !important;
+}
+
+.k-taskboard-card {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Button Styles */
+.k-button {
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s !important;
+}
+
+.k-button-solid-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.k-button-solid-primary:hover {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+}
+
+/* Popup Customization */
+.k-popup {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Input Styles */
+.k-input {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+}
+
+.k-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+/* Dropdown Styles */
+.k-dropdown {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+}
+
+.k-dropdown .k-input {
+  padding: 8px 12px !important;
+}
+
+/* Chart Customization */
+.k-chart {
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--header-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Animation for Hover States */
+.k-grid tr,
+.k-button,
+.k-dropdown,
+.k-input {
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Status Colors */
+.status-new {
+  color: var(--primary-color) !important;
+  background-color: rgba(37, 99, 235, 0.1) !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+}
+
+.status-in-progress {
+  color: #ca8a04 !important;
+  background-color: rgba(202, 138, 4, 0.1) !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+}
+
+.status-closed {
+  color: var(--success-color) !important;
+  background-color: rgba(22, 163, 74, 0.1) !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+}
+
+/* Priority Colors */
+.priority-high {
+  color: var(--danger-color) !important;
+  font-weight: 600 !important;
+}
+
+.priority-medium {
+  color: #ca8a04 !important;
+  font-weight: 500 !important;
+}
+
+.priority-low {
+  color: var(--success-color) !important;
+  font-weight: 500 !important;
+}

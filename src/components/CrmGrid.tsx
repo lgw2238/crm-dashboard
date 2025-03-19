@@ -7,19 +7,217 @@ import {
   GridColumnReorderEvent
 } from '@progress/kendo-react-grid';
 import { DropDownList } from '@progress/kendo-react-dropdowns';
+import { Upload } from '@progress/kendo-react-upload';
 import { Popup } from '@progress/kendo-react-popup';
 import { orderBy, filterBy, CompositeFilterDescriptor, SortDescriptor } from '@progress/kendo-data-query';
 import { useCRMStore } from '../store/CrmStore';
 import { Customer, ColumnConfig } from '../types/Crm';
-import { Pencil, Trash2, MoreVertical, Plus, Columns, X } from 'lucide-react';
+import { Pencil, Trash2, MoreVertical, Plus, Columns, X, Building2, Phone, Mail } from 'lucide-react';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
+
+
+// 프로 파일 매핑 컴포넌트 추가 
+const AvatarCell = (props: any) => {
+  const [showPopup, setShowPopup] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+  const { updateCustomer } = useCRMStore();
+  const [editData, setEditData] = useState({
+    title: props.dataItem.title || '',
+    department: props.dataItem.department || '',
+    email: props.dataItem.email || '',
+    phone: props.dataItem.phone || '',
+  });
+
+  const handleSave = () => {
+    updateCustomer(props.tableId, {
+      ...props.dataItem,
+      title: editData.title,
+      department: editData.department,
+      email: editData.email,
+      phone: editData.phone,
+    });
+    setEditMode(false);
+  };
+
+  return (
+    <td>
+      <div ref={anchorRef} className="flex items-center gap-3">
+        <div
+          className="w-10 h-10 rounded-full overflow-hidden cursor-pointer"
+          onClick={() => setShowPopup(true)}
+        >
+          <img
+            src={props.dataItem.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face"}
+            alt={props.dataItem.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div>
+          <div className="font-medium">{props.dataItem.company}</div>
+          <div className="text-sm text-gray-500">{props.dataItem.title}</div>
+        </div>
+      </div>
+
+      <Popup
+        anchor={anchorRef.current}
+        show={showPopup}
+        popupClass="bg-white rounded-lg shadow-xl p-4 w-80"
+        animate={false}
+        onClose={() => {
+          setShowPopup(false);
+          setEditMode(false);
+        }}
+      >
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <img
+            src={props.dataItem.avatar}
+            alt={props.dataItem.name}
+            className="w-16 h-16 rounded-full"
+          />
+          <div>
+            <h3 className="font-semibold text-lg">{props.dataItem.name}</h3>
+            {!editMode && (
+          <>
+            <p className="text-gray-600">{props.dataItem.title}</p>
+            <p className="text-sm text-gray-500">{props.dataItem.department}</p>
+          </>
+            )}
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            setShowPopup(false);
+            setEditMode(false);
+          }}
+          className="text-gray-500 hover:text-gray-700"
+        >
+          <X size={20} />
+        </button>
+          </div>
+
+          {editMode ? (
+        <div className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <input
+          type="text"
+          value={editData.title}
+          onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Department</label>
+            <input
+          type="text"
+          value={editData.department}
+          onChange={(e) => setEditData({ ...editData, department: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+          type="email"
+          value={editData.email}
+          onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Phone</label>
+            <input
+          type="tel"
+          value={editData.phone}
+          onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            />
+          </div>
+          <div className="flex justify-end gap-2 mt-4">
+            <button
+          onClick={() => setEditMode(false)}
+          className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+            >
+          Cancel
+            </button>
+            <button
+          onClick={handleSave}
+          className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+            >
+          Save Changes
+            </button>
+          </div>
+        </div>
+          ) : (
+        <>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-gray-600">
+          <Building2 size={16} />
+          <span>{props.dataItem.department}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+          <Mail size={16} />
+          <span>{props.dataItem.email}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+          <Phone size={16} />
+          <span>{props.dataItem.phone}</span>
+            </div>
+          </div>
+          <button
+            // onClick={() => setEditMode(true)}
+            className="mt-4 w-full px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100"
+          >
+            Change Owner
+          </button>
+        </>
+          )}
+        </div>
+      </Popup>
+    </td>
+  );
+};
+
+
+const FileUploadCell = (props: any) => {
+  const { updateCustomer } = useCRMStore();
+
+  const handleFileUpload = (event: any) => {
+    const files = event.newState.map((file: any) => ({
+      name: file.name,
+      size: file.size,
+      extension: file.extension
+    }));
+
+    updateCustomer(props.tableId, {
+      ...props.dataItem,
+      files: [...(props.dataItem.files || []), ...files]
+    });
+  };
+
+  return (
+    <td>
+      <Upload
+        batch={false}
+        multiple={true}
+        defaultFiles={props.dataItem.files}
+        onStatusChange={handleFileUpload}
+        saveUrl={'https://demos.telerik.com/kendo-ui/service-v4/upload/save'}
+        removeUrl={'https://demos.telerik.com/kendo-ui/service-v4/upload/remove'}
+      />
+    </td>
+  );
+};
 
 const StatusCell = (props: GridCellProps) => {
   const { dataItem, field = '' } = props;
   const statusColors = {
-    'New': 'bg-blue-100 text-blue-800',
-    'In Progress': 'bg-yellow-100 text-yellow-800',
-    'Closed': 'bg-green-100 text-green-800'
+    'New': 'status-new',
+    'In Progress': 'status-in-progress',
+    'Closed': 'status-closed'
   };
 
   const statuses = ['New', 'In Progress', 'Closed'];
@@ -48,7 +246,7 @@ const StatusCell = (props: GridCellProps) => {
 
   return (
     <td>
-      <span className={`px-2 py-1 rounded-full text-sm ${field && statusColors[dataItem[field] as keyof typeof statusColors]}`}>
+      <span className={`px-4 py-2 rounded-full text-sm ${field && statusColors[dataItem[field] as keyof typeof statusColors]}`}>
         {field && dataItem[field]}
       </span>
     </td>
@@ -221,16 +419,18 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
   const columnMenuAnchor = React.useRef<HTMLButtonElement>(null);
   const [newColumnName, setNewColumnName] = useState('');
   const [showAddColumnForm, setShowAddColumnForm] = useState(false);
-
+  
+  // columns 필드값 하드코딩 
   const [columns, setColumns] = useState<ColumnConfig[]>([
-    { field: 'name', title: 'Name', width: '150px', show: true , cell: EditableCell},
-    { field: 'company', title: 'Company', width: '150px', show: true , cell: EditableCell},
+    { field: 'project', title: 'ProjectName', width: '150px', show: true , cell: EditableCell},
+    { field: 'owner', title: 'Owner', width: '150px', show: true, cell: AvatarCell},
     { field: 'email', title: 'Email', width: '200px', show: true , cell: EditableCell},
     { field: 'phone', title: 'Phone', width: '150px', show: true , cell: EditableCell},
-    { field: 'status', title: 'Status', width: '120px', show: true, cell: StatusCell },
+    { field: 'status', title: 'Status', width: '130px', show: true, cell: StatusCell },
     { field: 'priority', title: 'Priority', width: '120px', show: true, cell: PriorityCell },
-    { field: 'lastContact', title: 'Last Contact', width: '150px', show: true, editor: 'date' as 'date', format: '{0:d}' , cell : DateCell },
+    { field: 'lastContact', title: 'Last Contact', width: '170px', show: true, editor: 'date' as 'date', format: '{0:d}' , cell : DateCell },
     { field: 'notes', title: 'Notes', width: '200px', show: true , cell: EditableCell},
+    { field: 'files', title: 'Files', width: '200px', show: true, cell: FileUploadCell },
   ]);
 
   const handleAddColumn = (e: React.FormEvent) => {
@@ -278,7 +478,6 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
     const updatedItem = { 
       ...dataItem,
       [field]: value,
-      // inEdit: false  // 이 줄을 제거
     };
     updateCustomer(tableId, updatedItem);
   };
@@ -487,55 +686,6 @@ const SingleGrid: React.FC<SingleGridProps> = ({ tableId, customers }) => {
             format={column.format}
           />
         ))}
-        {/* <GridColumn 
-          field="name" 
-          title="Name" 
-          width="150px"
-          cell={EditableCell}
-        />
-        <GridColumn 
-          field="company" 
-          title="Company" 
-          width="150px"
-          cell={EditableCell}
-        />
-        <GridColumn 
-          field="email" 
-          title="Email" 
-          width="200px"
-          cell={EditableCell}
-        />
-        <GridColumn 
-          field="phone" 
-          title="Phone" 
-          width="150px"
-          cell={EditableCell}
-        />
-        <GridColumn 
-          field="status" 
-          title="Status" 
-          width="120px" 
-          cell={StatusCell}
-        />
-        <GridColumn 
-          field="priority" 
-          title="Priority" 
-          width="120px" 
-          cell={PriorityCell}
-        />
-        <GridColumn 
-          field="lastContact" 
-          title="Due date" 
-          width="150px" 
-          cell={DateCell}
-          format="{0:d}"
-        />
-        <GridColumn 
-          field="notes" 
-          title="Notes" 
-          width="200px"
-          cell={EditableCell}
-        /> */}
       </Grid>
     </div>
   );
