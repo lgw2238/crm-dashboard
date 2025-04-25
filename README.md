@@ -1,6 +1,6 @@
 # Kendo UI CRM Dashboard POC
 
-Kendo UI React 컴포넌트를 활용한 현대적인 CRM(고객 관계 관리) 대시보드 POC(Proof of Concept) 프로젝트입니다.
+Kendo UI React 컴포넌트를 활용한 CRM(고객 관계 관리) 대시보드 POC(Proof of Concept) 프로젝트입니다.
 
 
 <div style="display: flex; justify-content: space-between;">
