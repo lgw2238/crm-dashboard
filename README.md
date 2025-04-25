@@ -1,6 +1,10 @@
 # Kendo UI CRM Dashboard POC
 
-![CRM Dashboard](dashboard-preview.png)
+<div style="display: flex; justify-content: space-between;">
+  <img src="public/image/crm1.png" alt="Image 1" width="200" height="200"/>
+  <img src="public/images/crm2.png" alt="Image 2" width="200" height="200"/>
+  <img src="public/images/crm3.png" alt="Image 3" width="200" height="200"/>
+</div>
 
 Kendo UI React 컴포넌트를 활용한 현대적인 CRM(고객 관계 관리) 대시보드 POC(Proof of Concept) 프로젝트입니다.
 
