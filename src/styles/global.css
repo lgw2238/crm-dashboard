@@ -183,15 +183,21 @@
 /* Priority Colors */
 .priority-high {
   color: var(--danger-color) !important;
-  font-weight: 600 !important;
+  background-color: rgba(202, 138, 4, 0.1) !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
 }
 
 .priority-medium {
   color: #ca8a04 !important;
-  font-weight: 500 !important;
+  background-color: rgba(202, 138, 4, 0.1) !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
 }
 
 .priority-low {
   color: var(--success-color) !important;
-  font-weight: 500 !important;
+  background-color: rgba(202, 138, 4, 0.1) !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
 }

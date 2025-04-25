@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/global.css';
 import {
   Grid,
   GridColumn,
@@ -213,6 +214,7 @@ const FileUploadCell = (props: any) => {
 };
 
 const StatusCell = (props: GridCellProps) => {
+  // status
   const { dataItem, field = '' } = props;
   const statusColors = {
     'New': 'status-new',
@@ -254,11 +256,12 @@ const StatusCell = (props: GridCellProps) => {
 };
 
 const PriorityCell = (props: GridCellProps) => {
+  // 상태값
   const { dataItem, field = '' } = props;
   const priorityColors = {
-    'High': 'bg-red-100 text-yellow-800',
-    'Medium': 'bg-blue-100 text-green-800',
-    'Low': 'bg-yellow-100 text-green-800'
+    'High': 'priority-high',
+    'Medium': 'priority-medium',
+    'Low': 'priority-low'
   };
 
 

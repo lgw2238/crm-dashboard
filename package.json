@@ -20,6 +20,7 @@
     "@progress/kendo-theme-default": "^7.2.0",
     "@progress/kendo-drawing": "^1.19.0",
     "@progress/kendo-data-query": "^1.7.0",
+    "@progress/kendo-react-upload": "^7.2.3",
     "@progress/kendo-react-layout": "^7.2.3",
     "@progress/kendo-react-buttons": "^7.2.3",
     "@progress/kendo-react-popup": "^7.2.3",
